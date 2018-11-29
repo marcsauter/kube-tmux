@@ -12,6 +12,10 @@ Add `kube-tmux` to your status bar `.tmux.conf`:
 ```
 set -g status-right "#[fg=black] #(kube-tmux) #H %H:%M %d.%m.%Y"
 ```
+or with a custom template:
+```
+kube-tmux '<{{.Context}}::{{.Namespace}}>'
+```
 
 Consider reducing the status-interval for more current information:
 ```
