@@ -7,6 +7,10 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 )
 
+const (
+	defaultNamespace = "default"
+)
+
 func main() {
 	format := "[{{.Context}}/{{.Namespace}}]"
 	if len(os.Args) > 1 {
@@ -19,10 +23,15 @@ func main() {
 	if err != nil {
 		os.Exit(1)
 	}
+	currentContext := config.CurrentContext
+	currentNamespace := config.Contexts[currentContext].Namespace
+	if currentNamespace == "" {
+		currentNamespace = defaultNamespace
+	}
 	template.Must(template.New("tmux").Parse(format)).Execute(os.Stdout, struct {
 		Context, Namespace string
 	}{
-		config.CurrentContext,
-		config.Contexts[config.CurrentContext].Namespace,
+		currentContext,
+		currentNamespace,
 	})
 }
